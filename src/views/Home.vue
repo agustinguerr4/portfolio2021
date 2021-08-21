@@ -6,17 +6,7 @@
       <ConfirmDialog></ConfirmDialog>
       <ConfirmDialog group="positionDialog"></ConfirmDialog>
 
-      <Menubar :model="menubarItems">
-        <template #start>
-          <i class="pi pi-apple"></i>
-        </template>
-        <template #end>
-          <i class="pi pi-wifi" />
-          <i class="pi pi-volume-up" />
-          <span>Sun 12:32</span>
-          <i class="pi pi-search" />
-        </template>
-      </Menubar>
+   <mi-menu />
 
       <div class="dock-window dock-advanced">
         <Dock :model="dockItems">
@@ -90,14 +80,14 @@
 </template>
 
 <script>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed, watch } from "vue";
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
 import TerminalService from "primevue/terminalservice";
 import Dock from "primevue/dock";
 import Terminal from "primevue/terminal";
 import Toast from "primevue/toast";
-import Menubar from "primevue/menubar";
+import MiMenu from '@/components/MiMenu'
 import Dialog from "primevue/dialog";
 import Tree from "primevue/tree";
 import Galleria from "primevue/galleria";
@@ -113,19 +103,29 @@ import safariIcon from "@/assets/icons/safari.svg";
 import settingsIcon from "@/assets/icons/settings.png";
 import terminalIcon from "@/assets/icons/terminal.svg";
 import trashIcon from "@/assets/icons/trash.png";
+import { Linkedin } from "mdue";
+import { useStore } from "vuex";
 
 export default {
   components: {
     ConfirmDialog,
     Dock,
-    Menubar,
+    
     Toast,
     Tree,
     Galleria,
     Dialog,
     Terminal,
+    Linkedin,
+    MiMenu,
   },
   setup() {
+    const store = useStore();
+
+    const lang = computed(() => {
+      return store.state.lang;
+    });
+
     const displayFinder = ref(false);
     const displayTerminal = ref(false);
     const displayPhotos = ref(false);
@@ -137,6 +137,7 @@ export default {
 
     const activeIndex = 0;
 
+ 
     const confirm = useConfirm();
 
     const dockItems = ref([
@@ -180,7 +181,7 @@ export default {
         },
       },
       {
-        label: "Photos",
+        label: lang.value == 0 ? "Photos" : "Fotos",
         icon: photosIcon,
         command: () => {
           displayPhotos.value = true;
@@ -201,6 +202,7 @@ export default {
         },
       },
     ]);
+    
     const dockBasicItems = ref([
       {
         label: "Finder",
@@ -223,7 +225,7 @@ export default {
         ),
       },
       {
-        label: "Photos",
+        label: lang.value == 0 ? "Photos" : "Fotos",
         icon: () => (
           <img
             alt="Photos"
@@ -243,112 +245,9 @@ export default {
         ),
       },
     ]);
-    const menubarItems = ref([
-      {
-        label: "m4ni.ga",
-        class: "menubar-root",
-        items: [
-          {
-            label: "Me",
-            icon: "pi pi-fw pi-user",
-            class: "menubar",
-          },
-          {
-            label: "Education",
-            icon: "pi pi-fw pi-book",
-          },
-          {
-            separator: true,
-          },
-          {
-            label: "Code",
-            icon: "pi pi-fw pi-heart",
-          },
-        ],
-      },
-      {
-        label: "Portfolio",
-        items: [
-          {
-            label: "Vue",
-            icon: "pi pi-fw pi-align-left",
-            items: [
-              {
-                label: "Dacal",
-                icon: "pi pi-fw pi-globe",
-              },
-              {
-                label: "AFA FTI",
-                icon: "pi pi-fw pi-globe",
-              },
-            ],
-          },
-          {
-            label: "WordPress",
-            icon: "pi pi-fw pi-align-left",
-            items: [
-              {
-                label: "Zingaro VW",
-                icon: "pi pi-fw pi-globe",
-              },
-              {
-                label: "GrowLife La Plata",
-                icon: "pi pi-fw pi-globe",
-              },
-            ],
-          },
-          {
-            label: "Collaboration",
-            icon: "pi pi-fw pi-align-left",
-            items: [
-              {
-                label: "Clubes TEDx",
-                icon: "pi pi-fw pi-globe",
-              },
-              {
-                label: "Instituto de Energía",
-                icon: "pi pi-fw pi-globe",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        label: "Contact",
-        items: [
-          {
-            label: "GitHub",
-            icon: "pi pi-fw pi-user-plus",
-          },
-          {
-            label: "GitLab",
-            icon: "pi pi-fw pi-user-minus",
-          },
-          {
-            label: "LinkedIn",
-            icon: "pi pi-fw pi-users",
-          },
-          {
-            label: "E-mail",
-            icon: "pi pi-fw pi-users",
-          },
-        ],
-      },
-      {
-        label: "Language",
-        items: [
-          {
-            label: "English",
-            icon: "pi pi-fw pi-pencil",
-          },
-          {
-            label: "Spanish",
-            icon: "pi pi-fw pi-calendar-times",
-          },
-        ],
-      },
-    ]);
-    const responsiveOptions = ref([
+   
+   
+  const responsiveOptions = ref([
       {
         breakpoint: "1024px",
         numVisible: 3,
@@ -373,14 +272,14 @@ export default {
 
     const loadSaludo = () => {
       confirm.require({
-        message: "Developing with Vue 3 by https://github.com/m4niga",
+        message: "Developing with Vue 3 - info@agustinguerra.com.ar",
         header: "My portfolio is under construction!",
         icon: "pi pi-exclamation-triangle",
         acceptLabel: "Ok",
-        rejectLabel: "",
+        rejectLabel: "Cancel",
         accept: () => {
           toast.add({
-            severity: "danger",
+            severity: "info",
             summary: "Confirmed",
             detail: "You have accepted",
             life: 3000,
@@ -541,66 +440,6 @@ export default {
           alt: "Description for Image 5",
           title: "Title 5",
         },
-        {
-          itemImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          thumbnailImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          alt: "Description for Image 6",
-          title: "Title 6",
-        },
-        {
-          itemImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          thumbnailImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          alt: "Description for Image 7",
-          title: "Title 7",
-        },
-        {
-          itemImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          thumbnailImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          alt: "Description for Image 8",
-          title: "Title 8",
-        },
-        {
-          itemImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          thumbnailImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          alt: "Description for Image 9",
-          title: "Title 9",
-        },
-        {
-          itemImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          thumbnailImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          alt: "Description for Image 10",
-          title: "Title 10",
-        },
-        {
-          itemImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          thumbnailImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          alt: "Description for Image 11",
-          title: "Title 11",
-        },
-        {
-          itemImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          thumbnailImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          alt: "Description for Image 12",
-          title: "Title 12",
-        },
-        {
-          itemImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          thumbnailImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          alt: "Description for Image 13",
-          title: "Title 13",
-        },
-        {
-          itemImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          thumbnailImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          alt: "Description for Image 14",
-          title: "Title 14",
-        },
-        {
-          itemImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          thumbnailImageSrc: "https://i.blogs.es/594843/chrome/450_1000.jpg",
-          alt: "Description for Image 15",
-          title: "Title 15",
-        },
       ];
 
       TerminalService.on("command", commandHandler);
@@ -642,7 +481,6 @@ export default {
       nodes,
       dockItems,
       dockBasicItems,
-      menubarItems,
       onDockItemClick,
       commandHandler,
       displayFinder,
@@ -660,7 +498,7 @@ export default {
       settingsIcon,
       terminalIcon,
       trashIcon,
-      activeIndex,
+      activeIndex
     };
   },
   methods: {
@@ -751,18 +589,15 @@ export default {
 }
 
 .custom-galleria-footer {
-    display: flex;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.9);
-    color: #ffffff;
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #ffffff;
 
-    > 
-
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-    
+  > &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
   }
+}
 
 ::v-deep(.custom-galleria) {
   &.fullscreen {

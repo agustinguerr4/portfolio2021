@@ -1,4 +1,9 @@
 <template>
+  <metainfo>
+    <!-- <template v-slot:title="{ content }">{{
+      content ? `${content} | SITE_NAME` : `SITE_NAME`
+    }}</template> -->
+  </metainfo>
   <router-view />
 </template>
 
@@ -8,17 +13,25 @@ import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import "primevue/resources/themes/saga-green/theme.css";
 //import "./assets/css/theme.css"
-import "primeflex/src/_variables.scss";
-import "primeflex/src/_grid.scss";
-import "primeflex/src/_formlayout.scss";
-import "primeflex/src/_display.scss";
-import "primeflex/src/_text.scss";
-import "primeflex/src/flexbox/_flexbox.scss";
-import "primeflex/src/_spacing.scss";
-import "primeflex/src/_elevation.scss";
+import "@/assets/src/_variables.scss";
+import "@/assets/src/_grid.scss";
+import "@/assets/src/_formlayout.scss";
+import "@/assets/src/_display.scss";
+import "@/assets/src/_text.scss";
+import "@/assets/src/flexbox/_flexbox.scss";
+import "@/assets/src/_spacing.scss";
+import "@/assets/src/_elevation.scss";
+// import { useMeta } from "vue-meta";
 
 export default {
   name: "App",
+  // metaInfo: {
+  //   title: "Agustin Guerra - FrontEnd Developer",
+  //   htmlAttrs: {
+  //     lang: "en",
+  //     amp: true,
+  //   },
+  // },
 };
 </script>
 
@@ -44,26 +57,30 @@ export default {
   color: #42b983;
 }
 
-
-
 @media screen and (max-width: 768px) {
-.dock-window.dock-advanced {
-  min-height: calc(100vh - 34px);
-  max-width: 100vw;
-  overflow: hidden;
-}
-.p-dock-list{
-  width: 100vw;
-}
-.p-dock .p-dock-action {
+  .dock-window.dock-advanced {
+    min-height: calc(100vh - 34px);
+    max-width: 100vw;
+    overflow: hidden;
+  }
+  .p-dock-list {
+    width: 100vw;
+  }
+  .p-dock .p-dock-action {
     width: 2rem;
     height: 2rem;
-}
+  }
+  .p-dock-list {
+    margin-bottom: 2px !important;
+  }
 }
 
 @media screen and (min-width: 768px) {
   .dock-window.dock-advanced {
     height: calc(100vh - 34px) !important;
+  }
+  .p-dock-list {
+    margin-bottom: 4px !important;
   }
 }
 
